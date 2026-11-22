@@ -1,34 +1,57 @@
 # CS212 – Data Structures Course Project
 ## Project #77: Streetlight Repair Desk
 
-**Registered Practical Section:** CRN: 7182  
-**Team ID:** Team 77  
+![C++17](https://img.shields.io/badge/C%2B%2B-17-blue) ![Manual Data Structures](https://img.shields.io/badge/Data%20Structures-Manual%20Implementation-green) ![Console App](https://img.shields.io/badge/Type-Console%20Application-lightgrey)
+
+An integrated, menu-driven C++ console application for managing streetlight poles and repair dispatch — implementing **Stack, Queue, Singly Linked List, Binary Search Tree (BST), and Bubble Sort 100% manually** (CS212 Labs 2–6 style, without `std::stack`, `std::queue`, `std::list`, `std::map`, or ready-made tree structures).
+
+**Registered Practical Section:** CRN 7182  
+**Team ID:** Team 77
 
 ### Team Members (CRN: 7182)
-1. **Mohamed Ahmed Abdelkhalek Gohary** — `200038102`
-2. **Yusuf Ahmed Muhammad Sayed** — `200067726`
-3. **Bilal Mahmoud Fahmy Mahmoud** — `200069114`
-4. **Abdelrahman Salah Ibrahim Abdelwahab** — `200070046`
-5. **Abdul-Azim Ibrahim Abdul-Azim Ibrahim Jabr** — `200073612`
-6. **Hamza Abdelfattah Elazab Fayad** — `200083256`
+
+| # | Name | ID |
+|---|------|----|
+| 1 | Mohamed Ahmed Abdelkhalek Gohary | `200038102` |
+| 2 | Yusuf Ahmed Muhammad Sayed | `200067726` |
+| 3 | Bilal Mahmoud Fahmy Mahmoud | `200069114` |
+| 4 | Abdelrahman Salah Ibrahim Abdelwahab | `200070046` |
+| 5 | Abdul-Azim Ibrahim Abdul-Azim Ibrahim Jabr | `200073612` |
+| 6 | Hamza Abdelfattah Elazab Fayad | `200083256` |
 
 ---
 
-## 1. Project Overview & Manual Data Structures
-An integrated, menu-driven C++ console application implementing all four required data structures and sorting **100% manually** (following CS212 Labs 2–6 conventions, without `std::stack`, `std::queue`, `std::list`, `std::map`, or ready-made tree structures):
+## 1. Data Structures Used
 
-- **Stack (`stackPole[100]`, `topIdx` — Lab 2 Style):** Recent completed repairs history (**LIFO**) + Undo/Reopen last repair.
-- **Queue (`queuePole[100]`, `frontIdx`, `rearIdx` — Lab 3 Style):** Broken streetlights awaiting technicians (**FIFO**).
-- **Singly Linked List (`struct Node* head` — Lab 5 Style):** Dynamic streetlight inventory records (`id`, `street`, `status`).
-- **Binary Search Tree (`struct BSTNode* root` — Lab 6 Style):** Fast Pole ID lookup (`insertBST`, `searchBST`, `deleteBST`, `inorder`, `preorder`, `postorder`).
-- **Sorting (`sortListByStreet` — Lab 5 Style):** Bubble Sort on the Linked List alphabetically by Street Name.
+| Structure | Implementation | Lab | Purpose in the System |
+|-----------|----------------|-----|-----------------------|
+| **Stack** | `stackPole[100]`, `topIdx` | Lab 2 | Recent completed repairs (**LIFO**) + Undo / Reopen last repair |
+| **Queue** | `queuePole[100]`, `frontIdx`, `rearIdx` | Lab 3 | Broken streetlights awaiting technicians (**FIFO**) |
+| **Singly Linked List** | `struct Node* head` | Lab 5 | Dynamic streetlight inventory (`id`, `street`, `status`) |
+| **Binary Search Tree** | `struct BSTNode* root` | Lab 6 | Fast Pole ID lookup — `insertBST`, `searchBST`, `deleteBST`, `inorder`, `preorder`, `postorder` |
+| **Bubble Sort** | `sortListByStreet` | Lab 5 | Sort the Linked List alphabetically by Street Name |
 
----
+All structures are **synchronized**: adding / deleting a pole updates the Linked List, BST, and Queue together.
 
-## 2. Project Directory Layout
+## 2. Menu Options
+
+| Choice | Action | Choice | Action |
+|--------|--------|--------|--------|
+| `1` | Add Pole | `8` | Repair Next (dequeue → push to Stack) |
+| `2` | Delete Pole (sync delete) | `9` | Show Queue & Stack |
+| `3` | Update Street | `10` | Undo Last Repair (pop → re-enqueue) |
+| `4` | Show Inventory | `11` | Sort by Street (Bubble Sort) |
+| `5` | Search Pole (BST) | `12` | System Status |
+| `6` | BST Traversals | `13` | Load Sample Data |
+| `7` | Report Broken (enqueue) | `0` | Exit |
+
+## 3. Project Layout
+
 ```text
-CS212_Streetlight_Repair_Desk/
+Data-Structures_Project/
 ├── README.md
+├── Makefile
+├── .gitignore
 ├── Source_Code/
 │   └── main.cpp
 ├── Report/
@@ -49,23 +72,87 @@ CS212_Streetlight_Repair_Desk/
     └── sample_demo_input.txt
 ```
 
----
-
-## 3. How to Compile and Run
+## 4. How to Compile and Run
 
 ### Using `g++` (Linux / macOS / Windows MinGW)
+
 ```bash
 g++ -std=c++17 Source_Code/main.cpp -o streetlight_app
 ./streetlight_app
 ```
-*(On Windows Command Prompt / PowerShell, run `streetlight_app.exe`).*
+
+> On Windows Command Prompt / PowerShell, run `streetlight_app.exe`.
+
+### Using `make`
+
+```bash
+make          # build
+make run      # build + run interactively
+make demo     # build + run the automated demo script
+make clean    # remove build artifacts
+```
 
 ### Using an IDE (Code::Blocks / Dev-C++ / Visual Studio / CLion)
+
 1. Open `Source_Code/main.cpp` in a C++ Console Application project.
 2. Click **Build and Run**.
 
 ### Automated Demo Script
+
 To reproduce the tested end-to-end workflow automatically:
+
 ```bash
 ./streetlight_app < Tests/sample_demo_input.txt
+# or
+make demo
 ```
+
+## 5. Screenshots
+
+### Code Screenshots
+
+| Linked List | BST |
+|-------------|-----|
+| ![Linked List](Screenshots/code_01_linked_list.png) | ![BST](Screenshots/code_02_bst.png) |
+
+| Queue | Stack |
+|-------|-------|
+| ![Queue](Screenshots/code_03a_queue.png) | ![Stack](Screenshots/code_03b_stack.png) |
+
+| Bubble Sort |
+|-------------|
+| ![Bubble Sort](Screenshots/code_04_bubble_sort.png) |
+
+### Execution Screenshots
+
+| Menu & Inventory | BST Lookup & Traversals |
+|------------------|-------------------------|
+| ![Menu and Inventory](Screenshots/exec_01_menu_and_inventory.png) | ![BST Lookup and Traversals](Screenshots/exec_02_bst_lookup_traversals.png) |
+
+| Queue / Stack / Undo | Validation & Edge Cases |
+|----------------------|-------------------------|
+| ![Queue Stack Undo](Screenshots/exec_03_integrated_queue_stack_undo.png) | ![Validation](Screenshots/exec_04_validation_edge_cases.png) |
+
+| Sorting & Sync Delete |
+|-----------------------|
+| ![Sorting and Sync Delete](Screenshots/exec_05_sorting_and_sync_delete.png) |
+
+## 6. Tests
+
+Full test matrix, inputs, and expected outputs: [`Tests/test_cases_documentation.md`](Tests/test_cases_documentation.md)
+
+| Test | Category | Result |
+|------|----------|--------|
+| TC-01 | Normal CRUD (load sample data + inventory) | ✅ PASS |
+| TC-02 | BST lookup & 3 traversals | ✅ PASS |
+| TC-03 | Empty structures (safe, no crash) | ✅ PASS |
+| TC-04 | Boundary & single item | ✅ PASS |
+| TC-05 | Invalid & duplicate data (`abc`, `99`, `-5`, `999`) | ✅ PASS |
+| TC-06 | Integration: Repair dispatch (FIFO → LIFO) | ✅ PASS |
+| TC-07 | Integration: Undo repair | ✅ PASS |
+| TC-08 | Integration: Sync delete (List + BST + Queue) | ✅ PASS |
+| TC-09 | Sorting (Bubble Sort by street) | ✅ PASS |
+
+## 7. Report
+
+The full project report is available at: [`Report/CS212_Project_77_Streetlight_Repair_Desk_Report.docx`](Report/CS212_Project_77_Streetlight_Repair_Desk_Report.docx)
