@@ -1,0 +1,27 @@
+# Build outputs
+streetlight_app
+streetlight_app.exe
+*.o
+*.obj
+*.out
+*.a
+*.so
+*.dll
+*.dylib
+
+# IDE / editor
+.vscode/
+.idea/
+*.code-workspace
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.log
