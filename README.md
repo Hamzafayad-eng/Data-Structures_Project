@@ -51,7 +51,14 @@ All structures are **synchronized**: adding / deleting a pole updates the Linked
 Data-Structures_Project/
 ├── README.md
 ├── Makefile
+├── build.bat                 ← Windows: double-click to build .exe & run
+├── build.sh                  ← Linux/macOS: one-click build & run
 ├── .gitignore
+├── .vscode/                  ← VS Code Run button config
+│   ├── tasks.json            ← Build task (g++ → streetlight_app.exe)
+│   ├── launch.json           ← Run/Debug config (F5 / Ctrl+F5)
+│   ├── c_cpp_properties.json ← IntelliSense (C++17)
+│   └── settings.json         ← C/C++ Runner settings (optional)
 ├── Source_Code/
 │   └── main.cpp
 ├── Report/
@@ -92,7 +99,28 @@ make demo     # build + run the automated demo script
 make clean    # remove build artifacts
 ```
 
-### Using an IDE (Code::Blocks / Dev-C++ / Visual Studio / CLion)
+### Using VS Code (Run button ▶ / F5)
+
+The repo ships with a ready-made `.vscode/` config, so the Run button works out of the box:
+
+1. **Install prerequisites (once):**
+   - Extension **C/C++** (Microsoft) — and optionally **C/C++ Runner**
+   - A C++ compiler: on Windows install **MinGW-w64** and add its `bin` folder to `PATH`
+   - Verify in the VS Code integrated terminal (`Ctrl + \``): `g++ --version`
+2. **Open the folder, not just the file:** `File > Open Folder` → select `Data-Structures_Project`
+3. **Press the Run button:** open the **Run and Debug** panel (left sidebar ▶) and click ▶, or press `F5` (Debug) / `Ctrl+F5` (Run without Debug — best for this menu app).
+   - `tasks.json` builds `streetlight_app.exe` (Windows) / `streetlight_app` (Linux/macOS) first, then `launch.json` runs it.
+4. **Get a standalone `.exe`:** double-click **`build.bat`** (Windows) or run `./build.sh` (Linux/macOS) — it builds and runs the program without VS Code. After building, you can also double-click `streetlight_app.exe` directly.
+
+> **Troubleshooting**
+> | Symptom | Fix |
+> |---|---|
+> | `g++ is not recognized` | MinGW not in `PATH` — add its `bin` folder to PATH and restart VS Code |
+> | `launch.json` / Run button missing | Open the **folder** (`File > Open Folder`), not a single file |
+> | `program not found` / `.exe` missing | Run the `build` task first (`Terminal > Run Build Task`) or press `F5` (it builds automatically via `preLaunchTask`) |
+> | IntelliSense red squiggles but it compiles | Check `g++ --version` works; `.vscode/c_cpp_properties.json` uses `g++` from `PATH` — if your MinGW is elsewhere, set `compilerPath` to its full path (e.g. `C:/MinGW/bin/g++.exe`) |
+
+### Using another IDE (Code::Blocks / Dev-C++ / Visual Studio / CLion)
 
 1. Open `Source_Code/main.cpp` in a C++ Console Application project.
 2. Click **Build and Run**.

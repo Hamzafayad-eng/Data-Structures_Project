@@ -10,7 +10,12 @@ streetlight_app.exe
 *.dylib
 
 # IDE / editor
-.vscode/
+# Ignore personal VS Code state, but keep the shared Run/Build config:
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/c_cpp_properties.json
+!.vscode/settings.json
 .idea/
 *.code-workspace
 *.swp
@@ -25,3 +30,6 @@ Desktop.ini
 # Temporary files
 *.tmp
 *.log
+
+# C/C++ Runner output
+build/
