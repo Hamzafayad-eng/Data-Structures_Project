@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-std=c++17",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "${workspaceFolder}/Source_Code/main.cpp",
+        "-o",
+        "${workspaceFolder}/streetlight_app"
+      ],
+      "windows": {
+        "args": [
+          "-std=c++17",
+          "-g",
+          "-Wall",
+          "-Wextra",
+          "${workspaceFolder}/Source_Code/main.cpp",
+          "-o",
+          "${workspaceFolder}/streetlight_app.exe"
+        ]
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": ["$gcc"]
+    }
+  ]
+}
