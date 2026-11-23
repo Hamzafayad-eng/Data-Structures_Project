@@ -7,7 +7,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/streetlight_app",
       "windows": {
-        "program": "${workspaceFolder}/Source_Code/main.exe"
+        "program": "${workspaceFolder}/streetlight_app.exe"
       },
       "args": [],
       "stopAtEntry": false,
