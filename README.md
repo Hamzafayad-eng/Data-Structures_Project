@@ -55,12 +55,13 @@ Data-Structures_Project/
 ├── build.sh                  ← Linux/macOS: one-click build & run
 ├── .gitignore
 ├── .vscode/                  ← VS Code Run button config
-│   ├── tasks.json            ← Build task (g++ → streetlight_app.exe)
+│   ├── tasks.json            ← Windows builds Source_Code/main.exe; Linux builds streetlight_app
 │   ├── launch.json           ← Run/Debug config (F5 / Ctrl+F5)
 │   ├── c_cpp_properties.json ← IntelliSense (C++17)
 │   └── settings.json         ← C/C++ Runner settings (optional)
 ├── Source_Code/
-│   └── main.cpp
+│   ├── main.cpp
+│   └── main.exe                ← Windows executable; rebuilt from main.cpp by build.bat
 ├── Report/
 │   └── CS212_Project_77_Streetlight_Repair_Desk_Report.docx
 ├── Screenshots/
@@ -109,8 +110,8 @@ The repo ships with a ready-made `.vscode/` config, so the Run button works out 
    - Verify in the VS Code integrated terminal (`Ctrl + \``): `g++ --version`
 2. **Open the folder, not just the file:** `File > Open Folder` → select `Data-Structures_Project`
 3. **Press the Run button:** open the **Run and Debug** panel (left sidebar ▶) and click ▶, or press `F5` (Debug) / `Ctrl+F5` (Run without Debug — best for this menu app).
-   - `tasks.json` builds `streetlight_app.exe` (Windows) / `streetlight_app` (Linux/macOS) first, then `launch.json` runs it.
-4. **Get a standalone `.exe`:** double-click **`build.bat`** (Windows) or run `./build.sh` (Linux/macOS) — it builds and runs the program without VS Code. After building, you can also double-click `streetlight_app.exe` directly.
+   - `tasks.json` builds `Source_Code/main.exe` on Windows or `streetlight_app` on Linux/macOS, then `launch.json` runs the matching output. On Windows, every Run/Debug build refreshes the tracked executable from `Source_Code/main.cpp`.
+4. **Get a standalone executable:** double-click **`build.bat`** on Windows; it rebuilds `Source_Code/main.exe` from the current source and runs it. On Linux/macOS, run `./build.sh`; it builds and runs `streetlight_app`. Do not expect an existing executable to update merely because `main.cpp` changed—run the build command first.
 
 > **Troubleshooting**
 > | Symptom | Fix |
