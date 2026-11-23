@@ -28,10 +28,10 @@ An integrated, menu-driven C++ console application for managing streetlight pole
 | **Stack** | `stackPole[100]`, `topIdx` | Lab 2 | Recent completed repairs (**LIFO**) + Undo / Reopen last repair |
 | **Queue** | `queuePole[100]`, `frontIdx`, `rearIdx` | Lab 3 | Broken streetlights awaiting technicians (**FIFO**) |
 | **Singly Linked List** | `struct Node* head` | Lab 5 | Dynamic streetlight inventory (`id`, `street`, `status`) |
-| **Binary Search Tree** | `struct BSTNode* root` | Lab 6 | Fast Pole ID lookup — `insertBST`, `searchBST`, `deleteBST`, `inorder`, `preorder`, `postorder` |
+| **Binary Search Tree** | `struct BSTNode* root` | Lab 6 | Unique Pole ID index — `insertBST`, `searchBST`, `deleteBST`, and traversals. BST operations are O(log n) when balanced and O(n) in the worst case; displaying a full record also scans the Linked List. |
 | **Bubble Sort** | `sortListByStreet` | Lab 5 | Sort the Linked List alphabetically by Street Name |
 
-All structures are **synchronized**: adding / deleting a pole updates the Linked List, BST, and Queue together.
+Updates are applied to the structures that hold or schedule each pole: adding a pole updates the Linked List and BST; deleting it also removes any waiting Queue entry; reporting, repairing, and undoing a repair keep the pole status and Queue/Stack workflow in sync. The Stack stores repair history, so a deleted pole may still appear there until its history entry is handled. The Queue is a linear array: once its rear reaches the last slot, earlier unused positions are not reused until the Queue becomes empty.
 
 ## 2. Menu Options
 
@@ -167,7 +167,7 @@ make demo
 
 ## 6. Tests
 
-Full test matrix, inputs, and expected outputs: [`Tests/test_cases_documentation.md`](Tests/test_cases_documentation.md)
+Test matrix, scenarios, results, complexity notes, and known limits: [`Tests/test_cases_documentation.md`](Tests/test_cases_documentation.md)
 
 | Test | Category | Result |
 |------|----------|--------|
@@ -180,6 +180,8 @@ Full test matrix, inputs, and expected outputs: [`Tests/test_cases_documentation
 | TC-07 | Integration: Undo repair | ✅ PASS |
 | TC-08 | Integration: Sync delete (List + BST + Queue) | ✅ PASS |
 | TC-09 | Sorting (Bubble Sort by street) | ✅ PASS |
+| TC-10 | Stack and Queue full-capacity handling | ✅ PASS |
+| TC-11 | Undo with duplicate or deleted pole; EOF handling | ✅ PASS |
 
 ## 7. Report
 
