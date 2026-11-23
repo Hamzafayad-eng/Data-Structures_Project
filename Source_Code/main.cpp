@@ -7,7 +7,7 @@ using namespace std;
 // CS212 Project #77: Streetlight Repair Desk
 // =========================================================
 
-// ---------------- 1. STACK (Recent Repairs - Lab 2) ----------------
+// ---------------- 1. STACK (Recent Repairs) ----------------
 int stackPole[100];
 string stackTech[100];
 int topIdx = -1;
@@ -48,7 +48,7 @@ void displayStack() {
         cout << "Pole #" << stackPole[i] << " | Tech: " << stackTech[i] << "\n";
 }
 
-// ---------------- 2. QUEUE (Broken Lights - Lab 3) ----------------
+// ---------------- 2. QUEUE (Broken Lights) ----------------
 int queuePole[100];
 string queueIssue[100];
 int frontIdx = -1, rearIdx = -1;
@@ -113,7 +113,7 @@ void displayQueue() {
         cout << "Pole #" << queuePole[i] << " | Issue: " << queueIssue[i] << "\n";
 }
 
-// ---------------- 3. LINKED LIST (Inventory - Lab 5) ----------------
+// ---------------- 3. LINKED LIST (Inventory) ----------------
 struct Node {
     int id;
     string street;
@@ -208,7 +208,7 @@ void sortListByStreet() {
     displayList();
 }
 
-// ---------------- 4. BINARY SEARCH TREE (Pole Lookup - Lab 6) ----------------
+// ---------------- 4. BINARY SEARCH TREE (Pole Lookup) ----------------
 struct BSTNode {
     int data;
     BSTNode *left, *right;
@@ -303,7 +303,7 @@ string readLine() {
     return s;
 }
 
-// ---------------- MAIN MENU (Lab Switch-Case Style) ----------------
+// ---------------- MAIN MENU ( Switch-Case Style) ----------------
 int main() {
     int ch, id;
     string street, issue, tech;
