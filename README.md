@@ -23,15 +23,15 @@ An integrated, menu-driven C++ console application for managing streetlight pole
 
 ## 1. Data Structures Used
 
-| Structure | Implementation | Lab | Purpose in the System |
+| Structure | Implementation | Index / Method | Purpose in the System |
 |-----------|----------------|-----|-----------------------|
-| **Stack** | `stackPole[100]`, `topIdx` | Lab 2 | Recent completed repairs (**LIFO**) + Undo / Reopen last repair |
-| **Queue** | `queuePole[100]`, `frontIdx`, `rearIdx` | Lab 3 | Broken streetlights awaiting technicians (**FIFO**) |
-| **Singly Linked List** | `struct Node* head` | Lab 5 | Dynamic streetlight inventory (`id`, `street`, `status`) |
-| **Binary Search Tree** | `struct BSTNode* root` | Lab 6 | Unique Pole ID index — `insertBST`, `searchBST`, `deleteBST`, and traversals. BST operations are O(log n) when balanced and O(n) in the worst case; displaying a full record also scans the Linked List. |
-| **Bubble Sort** | `sortListByStreet` | Lab 5 | Sort the Linked List alphabetically by Street Name |
+| **Stack** | `stackPole[100]`, `topIdx` | Array | Recent completed repairs (**LIFO**) + Undo / Reopen last repair |
+| **Queue** | `queuePole[100]`, `queueIssue[100]`, `frontIdx`, `rearIdx`, `queueCount` | Circular array | Broken lights awaiting technicians (**FIFO**); freed slots are reused by wrapping the indices |
+| **Singly Linked List** | `struct Node* head` | Dynamic nodes | Streetlight records (`id`, `street`, `status`); append, search, delete, traverse, and relink for sorting |
+| **Binary Search Tree** | `struct BSTNode* root`; each tree node stores `Node* record` | ID index | Search returns the pole record directly; `insertBST`, `searchBST`, `deleteBST`, and traversals. Operations are O(log n) when balanced and O(n) in the worst case. |
+| **Bubble Sort** | `sortListByStreet` | Linked-list relinking | Sort the Linked List alphabetically by street while preserving record addresses used by the BST |
 
-Updates are applied to the structures that hold or schedule each pole: adding a pole updates the Linked List and BST; deleting it also removes any waiting Queue entry; reporting, repairing, and undoing a repair keep the pole status and Queue/Stack workflow in sync. The Stack stores repair history, so a deleted pole may still appear there until its history entry is handled. The Queue is a linear array: once its rear reaches the last slot, earlier unused positions are not reused until the Queue becomes empty.
+Updates are applied to the structures that hold or schedule each pole: adding a pole stores its record in the Linked List and its ID plus record pointer in the BST; deleting it removes it from the BST, list, and any waiting Queue entry. Reporting, repairing, and undoing a repair update the same inventory record and move the ID through the circular Queue and repair-history Stack. The Stack stores repair history, so a deleted pole may remain there until its history entry is handled. Bubble Sort re-links inventory nodes instead of swapping their contents, keeping BST record pointers valid.
 
 ## 2. Menu Options
 
@@ -51,16 +51,17 @@ Updates are applied to the structures that hold or schedule each pole: adding a 
 Data-Structures_Project/
 ├── README.md
 ├── Makefile
-├── build.bat                 ← Windows: double-click to build .exe & run
+├── build.bat                 ← Windows: rebuild Source_Code/main.exe from source & run
 ├── build.sh                  ← Linux/macOS: one-click build & run
 ├── .gitignore
 ├── .vscode/                  ← VS Code Run button config
-│   ├── tasks.json            ← Build task (g++ → streetlight_app.exe)
+│   ├── tasks.json            ← Windows builds Source_Code/main.exe; Linux builds streetlight_app
 │   ├── launch.json           ← Run/Debug config (F5 / Ctrl+F5)
 │   ├── c_cpp_properties.json ← IntelliSense (C++17)
 │   └── settings.json         ← C/C++ Runner settings (optional)
 ├── Source_Code/
-│   └── main.cpp
+│   ├── main.cpp
+│   └── main.exe                 ← Windows build output (regenerated from main.cpp)
 ├── Report/
 │   └── CS212_Project_77_Streetlight_Repair_Desk_Report.docx
 ├── Screenshots/
@@ -109,8 +110,8 @@ The repo ships with a ready-made `.vscode/` config, so the Run button works out 
    - Verify in the VS Code integrated terminal (`Ctrl + \``): `g++ --version`
 2. **Open the folder, not just the file:** `File > Open Folder` → select `Data-Structures_Project`
 3. **Press the Run button:** open the **Run and Debug** panel (left sidebar ▶) and click ▶, or press `F5` (Debug) / `Ctrl+F5` (Run without Debug — best for this menu app).
-   - `tasks.json` builds `streetlight_app.exe` (Windows) / `streetlight_app` (Linux/macOS) first, then `launch.json` runs it.
-4. **Get a standalone `.exe`:** double-click **`build.bat`** (Windows) or run `./build.sh` (Linux/macOS) — it builds and runs the program without VS Code. After building, you can also double-click `streetlight_app.exe` directly.
+   - `tasks.json` builds `Source_Code/main.exe` on Windows and `streetlight_app` on Linux/macOS, then `launch.json` runs the matching output. Windows Run/Debug rebuilds the tracked `.exe` from `Source_Code/main.cpp`.
+4. **Get a standalone executable:** on Windows, double-click **`build.bat`** to rebuild and run `Source_Code/main.exe` from the current source. On Linux/macOS, run `./build.sh` to build and run `streetlight_app`. A source change does not update an executable until a build is run.
 
 > **Troubleshooting**
 > | Symptom | Fix |
@@ -182,6 +183,7 @@ Test matrix, scenarios, results, complexity notes, and known limits: [`Tests/tes
 | TC-09 | Sorting (Bubble Sort by street) | ✅ PASS |
 | TC-10 | Stack and Queue full-capacity handling | ✅ PASS |
 | TC-11 | Undo with duplicate or deleted pole; EOF handling | ✅ PASS |
+| TC-12 | Circular Queue wraparound and slot reuse | ✅ PASS |
 
 ## 7. Report
 

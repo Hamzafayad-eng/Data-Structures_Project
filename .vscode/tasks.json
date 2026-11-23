@@ -22,7 +22,7 @@
           "-Wextra",
           "${workspaceFolder}/Source_Code/main.cpp",
           "-o",
-          "${workspaceFolder}/streetlight_app.exe"
+          "${workspaceFolder}/Source_Code/main.exe"
         ]
       },
       "group": {
