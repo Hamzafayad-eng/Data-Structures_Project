@@ -7,19 +7,20 @@ using namespace std;
 // =========================================================
 
 // ---------------- 1. REPAIR HISTORY STACK (LIFO) ----------------
-// Parallel arrays store a repaired pole ID and its technician at the same index.
-// Option 8 pushes a completed repair; Option 10 removes the newest repair first.
+// A completed repair is kept as a pole ID and technician name at the same array
+// position. Option 8 adds to the top; Option 10 reopens the most recent repair,
+// so repairs are undone in reverse order from the order in which they were made.
 int stackPole[100];
 string stackTech[100];
-// topIdx points to the newest repair, or stays -1 while the stack is empty.
+// topIdx is -1 when there are no repairs; otherwise it marks the newest entry.
 int topIdx = -1;
 
-// These helpers check the stack's state and report how many repairs it stores.
+// The checks guard the 100-entry arrays; stackSize() returns the number in use.
 bool isStackEmpty() { return topIdx == -1; }
 bool isStackFull()  { return topIdx == 99; }
 int stackSize()     { return topIdx + 1; }
 
-// Add one completed repair and technician to the next free stack position.
+// Store the ID and technician together. The caller checks capacity before dispatch.
 void push(int id, string tech) {
     if (isStackFull()) cout << "Stack Overflow!\n";
     else {
@@ -29,7 +30,7 @@ void push(int id, string tech) {
     }
 }
 
-// Remove and return the newest repair from the top of the stack.
+// Return the top pole ID, then move topIdx down so the next repair becomes newest.
 int pop() {
     if (isStackEmpty()) {
         cout << "Stack Underflow!\n";
@@ -38,13 +39,13 @@ int pop() {
     return stackPole[topIdx--];
 }
 
-// Read the newest repair ID without removing it.
+// Let Undo inspect the newest ID before deciding whether it is safe to pop it.
 int peekStack() {
     if (isStackEmpty()) return -1;
     return stackPole[topIdx];
 }
 
-// Display repairs from newest to oldest, matching the stack’s LIFO order.
+// Show the latest completed repair first, followed by older entries down to index 0.
 void displayStack() {
     if (isStackEmpty()) {
         cout << "Stack is empty (No recent repairs).\n";
@@ -56,21 +57,22 @@ void displayStack() {
 }
 
 // ---------------- 2. WAITING REPAIR QUEUE (CIRCULAR ARRAY, FIFO) ----------------
-// Option 7 adds a fault at the rear; Option 8 takes the oldest fault from front.
-// Circular indexing reuses array slots freed by dequeue, without changing FIFO order.
+// Option 7 places a reported fault at the rear; Option 8 takes the oldest fault
+// from the front. Modulo indexing wraps around the fixed array, so a dequeue
+// frees a slot that a later enqueue can reuse even while other faults are waiting.
 const int QUEUE_CAPACITY = 100;
 int queuePole[QUEUE_CAPACITY];
 string queueIssue[QUEUE_CAPACITY];
-// frontIdx and rearIdx wrap around the array; queueCount distinguishes empty/full.
+// frontIdx and rearIdx mark the active range; queueCount distinguishes empty from full.
 int frontIdx = -1, rearIdx = -1;
 int queueCount = 0;
 
-// These helpers report the current queue state and number of waiting faults.
+// Use queueCount for empty/full checks and to report the number of waiting faults.
 bool isQueueEmpty() { return queueCount == 0; }
 bool isQueueFull()  { return queueCount == QUEUE_CAPACITY; }
 int queueSize()     { return queueCount; }
 
-// Check the active circular range to prevent duplicate waiting entries.
+// Search only the queueCount occupied slots, wrapping indices when the range crosses 99.
 bool inQueue(int id) {
     for (int i = 0; i < queueCount; i++) {
         int index = (frontIdx + i) % QUEUE_CAPACITY;
@@ -79,7 +81,7 @@ bool inQueue(int id) {
     return false;
 }
 
-// Append a broken pole and its issue at the circular queue rear.
+// Add the pole ID and its issue at rearIdx; if full, leave the queue unchanged.
 void enqueue(int id, string issue) {
     if (isQueueFull()) cout << "Queue Overflow!\n";
     else {
@@ -91,7 +93,7 @@ void enqueue(int id, string issue) {
     }
 }
 
-// Remove the oldest waiting pole and advance the circular queue front.
+// Return the front ID, then advance frontIdx; reset both indices when the last item leaves.
 int dequeue() {
     if (isQueueEmpty()) {
         cout << "Queue Underflow!\n";
@@ -104,13 +106,14 @@ int dequeue() {
     return id;
 }
 
-// Return the next pole to dispatch without removing it from the queue.
+// Peek at the next repair so the menu can show which pole will be dispatched.
 int frontQueue() {
     if (isQueueEmpty()) return -1;
     return queuePole[frontIdx];
 }
 
-// Remove a deleted pole while copying remaining entries in their original FIFO order.
+// Delete every matching ID from the active range. Copy survivors toward the front
+// in their existing order, then set rearIdx to the last retained entry.
 void removeFromQueue(int id) {
     int kept = 0;
     int oldCount = queueCount;
@@ -128,7 +131,7 @@ void removeFromQueue(int id) {
     else rearIdx = (frontIdx + queueCount - 1) % QUEUE_CAPACITY;
 }
 
-// Print the active circular range from front to rear in dispatch order.
+// Visit exactly queueCount slots, wrapping at the end so display order stays FIFO.
 void displayQueue() {
     if (isQueueEmpty()) {
         cout << "Queue is empty (No broken lights waiting).\n";
@@ -142,19 +145,21 @@ void displayQueue() {
 }
 
 // ---------------- 3. STREETLIGHT INVENTORY (SINGLY LINKED LIST) ----------------
-// Every node is a complete pole record. The BST stores a pointer to this node,
-// so searching the tree returns the same record used by inventory and repairs.
+// Each node owns one pole's ID, street, and status. BST nodes keep non-owning
+// pointers to these records, allowing searches and repair actions to update the
+// same record that inventory display and list traversal use.
 struct Node {
     int id;
     string street;
-    string status; // Current condition shown to the operator.
+    string status; // The pole condition, such as "Working" or "Broken".
     Node* next;
 };
 
-// head points to the first record; NULL means that no poles are registered.
+// head starts the chain of records; NULL means the inventory currently has no poles.
 Node* head = NULL;
 
-// Create a record, append it to the inventory, and return its address for the BST.
+// Allocate and append a pole record. Returning its address lets insertBST store
+// an index to this exact record instead of copying its street and status.
 Node* insertList(int id, string street, string status) {
     Node* newNode = new Node;
     newNode->id = id;
@@ -172,7 +177,7 @@ Node* insertList(int id, string street, string status) {
     return newNode;
 }
 
-// Find a record by walking the list; this is used when updating a street name.
+// Walk from head to find an ID; Option 3 uses this search to update the street field.
 Node* searchList(int key) {
     Node* temp = head;
     while (temp != NULL) {
@@ -182,7 +187,7 @@ Node* searchList(int key) {
     return NULL;
 }
 
-// Unlink and free the requested pole record from the inventory.
+// Find the ID, reconnect the surrounding links, and delete the node; this handles the head too.
 void deleteList(int key) {
     Node *temp = head, *prev = NULL;
     if (temp != NULL && temp->id == key) {
@@ -199,7 +204,7 @@ void deleteList(int key) {
     delete temp;
 }
 
-// Release the inventory nodes when the program exits.
+// Free list-owned records after the BST index is cleared at program exit.
 void clearList() {
     while (head != NULL) {
         Node* temp = head;
@@ -208,14 +213,14 @@ void clearList() {
     }
 }
 
-// Count the current records by traversing the singly linked list.
+// Count nodes by following next links from head to the end of the inventory.
 int listSize() {
     int count = 0;
     for (Node* t = head; t != NULL; t = t->next) count++;
     return count;
 }
 
-// Traverse and display the complete pole inventory.
+// Visit each node once and print its ID, street, and current status.
 void displayList() {
     if (head == NULL) {
         cout << "Inventory Linked List is empty.\n";
@@ -226,8 +231,9 @@ void displayList() {
         cout << "ID: " << t->id << " | Street: " << t->street << " | Status: " << t->status << "\n";
 }
 
-// Bubble Sort compares adjacent streets and re-links nodes when out of order.
-// Re-linking preserves each node's address, so the BST's record pointers stay valid.
+// Bubble Sort compares neighboring street names and moves an out-of-order node
+// by changing next links. It does not swap record contents, so each BST pointer
+// continues to refer to the same pole after the list is sorted.
 void sortListByStreet() {
     if (head == NULL) {
         cout << "Inventory is empty!\n";
@@ -258,18 +264,19 @@ void sortListByStreet() {
 }
 
 // ---------------- 4. POLE ID INDEX (BINARY SEARCH TREE) ----------------
-// Each tree node stores a unique ID and a direct pointer to its inventory record.
-// Searching by ID can therefore return the full pole data without another list scan.
+// Keys are unique pole IDs: smaller IDs go left and larger IDs go right. Each
+// tree node also points to the matching list record, so a successful search can
+// return the street and status without scanning the inventory a second time.
 struct BSTNode {
     int data;
     Node* record;
     BSTNode *left, *right;
 };
 
-// root is the first ID index node, or NULL before any poles are added.
+// root points to the first BST node; it remains NULL until the first pole is added.
 BSTNode* root = NULL;
 
-// Insert an ID and the address of its matching inventory record into the BST.
+// Follow the key order to insert an ID with its matching record pointer; duplicates are ignored.
 BSTNode* insertBST(BSTNode* node, int key, Node* record) {
     if (node == NULL) {
         BSTNode* n = new BSTNode;
@@ -284,21 +291,22 @@ BSTNode* insertBST(BSTNode* node, int key, Node* record) {
     return node;
 }
 
-// Follow BST ordering to find an ID; the returned node also points to its record.
+// Compare the key at each node and follow one branch; return the node and its record pointer.
 BSTNode* searchBST(BSTNode* node, int key) {
     if (node == NULL || node->data == key) return node;
     if (key < node->data) return searchBST(node->left, key);
     return searchBST(node->right, key);
 }
 
-// Find the smallest ID in a subtree for deletion with two children.
+// The leftmost node in a right subtree is the inorder successor used by deletion.
 BSTNode* findMin(BSTNode* node) {
     while (node != NULL && node->left != NULL) node = node->left;
     return node;
 }
 
-// Remove an ID while preserving tree order; the successor's record pointer is
-// copied together with its ID when the deleted node has two children.
+// Delete the matching node while keeping the BST ordered. For a node with two
+// children, copy both the inorder successor's ID and its record pointer, then
+// remove that successor from the right subtree.
 BSTNode* deleteBST(BSTNode* node, int key) {
     if (node == NULL) return NULL;
     if (key < node->data) node->left = deleteBST(node->left, key);
@@ -314,8 +322,8 @@ BSTNode* deleteBST(BSTNode* node, int key) {
     return node;
 }
 
-// Inorder prints IDs in ascending order; preorder and postorder provide the
-// other standard traversal orders used to inspect the index.
+// Inorder visits left, current, right and prints IDs in sorted order. Preorder
+// visits current before its children; postorder visits the children first.
 void inorder(BSTNode* node) {
     if (node == NULL) return;
     inorder(node->left);
@@ -337,7 +345,7 @@ void postorder(BSTNode* node) {
     cout << node->data << " ";
 }
 
-// Free the index nodes after the menu ends; inventory records are freed separately.
+// BST nodes only reference list records, so free the index first and the records separately.
 void clearBST(BSTNode* node) {
     if (node == NULL) return;
     clearBST(node->left);
@@ -345,8 +353,8 @@ void clearBST(BSTNode* node) {
     delete node;
 }
 
-// Read an integer menu choice or ID. Discard invalid text and prompt again;
-// at EOF, return 0 so the menu can exit instead of repeatedly reading.
+// Read an integer choice or ID. If the input is not numeric, clear the stream and
+// discard that line before asking again. At EOF, return 0 so the menu can exit.
 int readInt() {
     int x;
     while (!(cin >> x)) {
@@ -358,7 +366,7 @@ int readInt() {
     return x;
 }
 
-// Read a complete street, fault description, or technician name, including spaces.
+// Read an entire text field so street names, fault descriptions, and names may contain spaces.
 string readLine() {
     string s;
     getline(cin >> ws, s);
@@ -366,8 +374,10 @@ string readLine() {
 }
 
 // ---------------- MAIN MENU AND DATA FLOW ----------------
-// Add/delete updates the inventory and ID index; reported faults enter the Queue.
-// Repair moves the front fault to the Stack, while Undo returns the latest repair.
+// Adding a pole creates one list record and indexes its ID in the BST. Reporting
+// a fault changes that record's status and queues its ID; Repair Next removes the
+// oldest ID, updates the same record, and saves the repair on the Stack. Undo
+// reverses the latest repair and returns the pole to the waiting Queue.
 int main() {
     int ch, id;
     string street, issue, tech;
@@ -383,8 +393,8 @@ int main() {
 
         switch (ch) {
             case 1:
-                // Validate the ID in the BST, create its inventory record, then
-                // store both the ID and record address in the tree index.
+                // Reject invalid or duplicate IDs before allocating anything. The
+                // returned list-node address is stored with the ID in the BST.
                 cout << "Pole ID: "; id = readInt();
                 if (id <= 0 || searchBST(root, id) != NULL)
                     cout << "Invalid or Duplicate Pole ID!\n";
@@ -397,8 +407,8 @@ int main() {
                 break;
 
             case 2:
-                // Remove the tree reference first, then free its inventory record
-                // and remove any waiting fault for the pole.
+                // Remove the BST node before freeing the record it points to. Also
+                // remove the pole from the Queue; older Stack history is handled by Undo.
                 cout << "Pole ID to delete: "; id = readInt();
                 if (searchBST(root, id) == NULL) cout << "Pole not found!\n";
                 else {
@@ -410,8 +420,8 @@ int main() {
                 break;
 
             case 3:
-                // The BST confirms the ID; the linked-list search finds the record
-                // whose street name will be changed.
+                // The BST verifies that the pole exists; the list search locates
+                // the record whose street name the operator wants to change.
                 cout << "Pole ID to update: "; id = readInt();
                 if (searchBST(root, id) == NULL) cout << "Pole not found!\n";
                 else {
@@ -425,7 +435,7 @@ int main() {
                 break;
 
             case 5: {
-                // The BST search returns both the matching ID and its record pointer.
+                // A successful BST search provides the complete pole record directly.
                 cout << "Pole ID to search: "; id = readInt();
                 BSTNode* foundPole = searchBST(root, id);
                 if (foundPole != NULL) {
@@ -445,8 +455,8 @@ int main() {
                 break;
 
             case 7:
-                // Find the inventory record through the BST, mark it Broken, and
-                // enqueue its issue at the FIFO rear.
+                // Use the BST pointer to update the pole's existing list record,
+                // then queue its ID and issue for FIFO dispatch.
                 cout << "Broken Pole ID: "; id = readInt();
                 if (searchBST(root, id) == NULL) cout << "Pole not found!\n";
                 else if (inQueue(id)) cout << "Already waiting in Queue!\n";
@@ -460,8 +470,9 @@ int main() {
                 break;
 
             case 8: {
-                // Dequeue the oldest fault, update the same record through the BST,
-                // and push the completed repair onto the history Stack.
+                // Do not dequeue unless the Stack can store the completed repair.
+                // Then update the same record found through the BST and save its ID
+                // and technician on the repair-history Stack.
                 if (isQueueEmpty()) cout << "No broken lights waiting!\n";
                 else if (isStackFull())
                     cout << "Repair history Stack is full! Undo a repair before continuing.\n";
@@ -485,8 +496,9 @@ int main() {
                 break;
 
             case 10: {
-                // Start with the newest repair. Check the index, queue, and capacity
-                // before changing the Stack or putting the pole back in the Queue.
+                // Inspect the newest repair first. Keep it on the Stack if the queue
+                // is full; otherwise update the existing record and requeue its ID.
+                // Deleted poles and IDs already waiting are handled separately.
                 if (isStackEmpty()) cout << "Nothing to undo!\n";
                 else {
                     id = peekStack();
@@ -527,8 +539,9 @@ int main() {
                 break;
 
             case 13:
-                // Add each sample record to the list and BST; enqueue the two
-                // sample poles whose status is Broken.
+                // Add sample records only if their IDs are absent. For each new
+                // broken pole, create the list record, index its pointer, and queue
+                // its issue so the sample starts with a usable dispatch workflow.
                 if (searchBST(root, 50) == NULL) {
                     Node* pole50 = insertList(50, "Tahrir Street", "Working");
                     root = insertBST(root, 50, pole50);
