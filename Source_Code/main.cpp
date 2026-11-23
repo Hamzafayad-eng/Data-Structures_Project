@@ -1,10 +1,10 @@
 #include <iostream>
 #include <string>
+#include <utility>
 using namespace std;
 
 // =========================================================
 // CS212 Project #77: Streetlight Repair Desk
-// Simple Lab 2 - Lab 6 Style (2 Structs Only: Node & BSTNode)
 // =========================================================
 
 // ---------------- 1. STACK (Recent Repairs - Lab 2) ----------------
@@ -164,6 +164,15 @@ void deleteList(int key) {
     delete temp;
 }
 
+// Delete every inventory node when the program is finished.
+void clearList() {
+    while (head != NULL) {
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+    }
+}
+
 int listSize() {
     int count = 0;
     for (Node* t = head; t != NULL; t = t->next) count++;
@@ -180,7 +189,7 @@ void displayList() {
         cout << "ID: " << t->id << " | Street: " << t->street << " | Status: " << t->status << "\n";
 }
 
-// Bubble Sort on Linked List (Lab 5 Page 10)
+// Sort the inventory alphabetically by street name using Bubble Sort.
 void sortListByStreet() {
     if (head == NULL) {
         cout << "Inventory is empty!\n";
@@ -266,10 +275,20 @@ void postorder(BSTNode* node) {
     cout << node->data << " ";
 }
 
-// Safe integer input so letters never freeze cin
+// Delete both subtrees before deleting the current BST node.
+void clearBST(BSTNode* node) {
+    if (node == NULL) return;
+    clearBST(node->left);
+    clearBST(node->right);
+    delete node;
+}
+
+// Read an integer and recover from non-numeric input. Returning 0 at EOF
+// lets the menu exit instead of repeatedly reading from a closed input stream.
 int readInt() {
     int x;
     while (!(cin >> x)) {
+        if (cin.eof()) return 0;
         cout << "Invalid input! Enter a number: ";
         cin.clear();
         cin.ignore(1000, '\n');
@@ -365,17 +384,21 @@ int main() {
                 }
                 break;
 
-            case 8:
+            case 8: {
                 if (isQueueEmpty()) cout << "No broken lights waiting!\n";
+                else if (isStackFull())
+                    cout << "Repair history Stack is full! Undo a repair before continuing.\n";
                 else {
                     cout << "Repairing Front Pole #" << frontQueue() << " | Tech Name: ";
                     tech = readLine();
                     id = dequeue();
-                    if (searchList(id) != NULL) searchList(id)->status = "Working";
+                    Node* pole = searchList(id);
+                    if (pole != NULL) pole->status = "Working";
                     push(id, tech);
                     cout << "Pole #" << id << " repaired & pushed to Stack!\n";
                 }
                 break;
+            }
 
             case 9:
                 displayQueue();
@@ -384,17 +407,29 @@ int main() {
                 if (!isStackEmpty()) cout << "Latest (Top): Pole #" << peekStack() << "\n";
                 break;
 
-            case 10:
+            case 10: {
                 if (isStackEmpty()) cout << "Nothing to undo!\n";
                 else {
-                    id = pop();
-                    if (searchList(id) != NULL) {
-                        searchList(id)->status = "Broken";
+                    id = peekStack();
+                    Node* pole = searchList(id);
+                    if (pole == NULL) {
+                        pop();
+                        cout << "Cannot reopen Pole #" << id << "; it was deleted from inventory.\n";
+                    } else if (inQueue(id)) {
+                        pop();
+                        pole->status = "Broken";
+                        cout << "Pole #" << id << " is already waiting in Queue; duplicate entry avoided.\n";
+                    } else if (isQueueFull()) {
+                        cout << "Queue is full! The repair remains in Stack; remove a waiting item before undoing.\n";
+                    } else {
+                        pop();
+                        pole->status = "Broken";
                         enqueue(id, "Reopened Repair");
                         cout << "Undone! Pole #" << id << " back in Queue.\n";
                     }
                 }
                 break;
+            }
 
             case 11:
                 sortListByStreet();
@@ -429,5 +464,8 @@ int main() {
         }
     } while (ch != 0);
 
+    clearBST(root);
+    root = NULL;
+    clearList();
     return 0;
 }
