@@ -1,7 +1,4 @@
-#include "stack_repair_history.h"
-#include "queue_faults_waiting.h"
-#include "linked_list_pole_inventory.h"
-#include "bst_pole_id_index.h"
+#include "repair_desk.h"
 #include <iostream>
 #include <string>
 

@@ -60,16 +60,13 @@ Data-Structures_Project/
 │   ├── c_cpp_properties.json ← IntelliSense (C++17)
 │   └── settings.json         ← C/C++ Runner settings (optional)
 ├── Source_Code/
-│   ├── main.cpp                 ← Menu and program flow
-│   ├── stack_repair_history.h      ← Stack declarations
-│   ├── stack_repair_history.cpp    ← Repair history Stack
-│   ├── queue_faults_waiting.h      ← Queue declarations
-│   ├── queue_faults_waiting.cpp    ← Circular Queue of reported faults
-│   ├── linked_list_pole_inventory.h ← Inventory list declarations
-│   ├── linked_list_pole_inventory.cpp ← Pole inventory Linked List
-│   ├── bst_pole_id_index.h         ← BST declarations
-│   ├── bst_pole_id_index.cpp       ← BST for pole ID lookup
-│   └── main.exe                  ← Windows build output (regenerated from all sources)
+│   ├── main.cpp                        ← Menu and program flow
+│   ├── repair_desk.h                   ← Shared types and function declarations
+│   ├── stack_repair_history.cpp        ← Stack for completed-repair history
+│   ├── queue_faults_waiting.cpp        ← Queue for reported faults waiting for repair
+│   ├── linked_list_pole_inventory.cpp  ← Linked List for pole inventory records
+│   ├── bst_pole_id_index.cpp           ← BST for pole ID lookup
+│   └── main.exe                        ← Windows build output (regenerated from all sources)
 ├── Report/
 │   └── CS212_Project_77_Streetlight_Repair_Desk_Report.docx
 ├── Screenshots/
