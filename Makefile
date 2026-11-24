@@ -1,8 +1,8 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -O2
 TARGET = streetlight_app
-SRC = Source_Code/main.cpp Source_Code/stack.cpp Source_Code/queue.cpp Source_Code/linked_list.cpp Source_Code/bst.cpp
-HEADERS = Source_Code/stack.h Source_Code/queue.h Source_Code/linked_list.h Source_Code/bst.h
+SRC = Source_Code/main.cpp Source_Code/stack_repair_history.cpp Source_Code/queue_faults_waiting.cpp Source_Code/linked_list_pole_inventory.cpp Source_Code/bst_pole_id_index.cpp
+HEADERS = Source_Code/stack_repair_history.h Source_Code/queue_faults_waiting.h Source_Code/linked_list_pole_inventory.h Source_Code/bst_pole_id_index.h
 
 all: $(TARGET)
 

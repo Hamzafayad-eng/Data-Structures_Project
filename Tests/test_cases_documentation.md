@@ -5,7 +5,7 @@
 From the project root, compile and run the supplied end-to-end session:
 
 ```bash
-g++ -std=c++17 -Wall -Wextra Source_Code/main.cpp Source_Code/stack.cpp Source_Code/queue.cpp Source_Code/linked_list.cpp Source_Code/bst.cpp -o streetlight_app
+g++ -std=c++17 -Wall -Wextra Source_Code/main.cpp Source_Code/stack_repair_history.cpp Source_Code/queue_faults_waiting.cpp Source_Code/linked_list_pole_inventory.cpp Source_Code/bst_pole_id_index.cpp -o streetlight_app
 ./streetlight_app < Tests/sample_demo_input.txt
 ```
 
@@ -40,4 +40,4 @@ The capacity and wraparound checks use scripted inputs; they are longer than the
 
 ## 4. Known Implementation Limits
 
-The circular Queue has a fixed capacity of 100 entries. The BST is not self-balancing, so sorted input can create a chain and slow its operations. All records remain in memory only while the program runs. The implementation is split by role: `main.cpp` contains the menu, `stack.cpp` and `queue.cpp` implement the work lists, `linked_list.cpp` manages pole records, and `bst.cpp` manages the BST. Each structure has its own header for shared declarations: `stack.h`, `queue.h`, `linked_list.h`, and `bst.h`.
+The circular Queue has a fixed capacity of 100 entries. The BST is not self-balancing, so sorted input can create a chain and slow its operations. All records remain in memory only while the program runs. The implementation is split by role: `main.cpp` contains the menu, `stack_repair_history.cpp` and `queue_faults_waiting.cpp` implement the work lists, `linked_list_pole_inventory.cpp` manages pole records, and `bst_pole_id_index.cpp` manages the BST. Each structure has its own header for shared declarations: `stack_repair_history.h`, `queue_faults_waiting.h`, `linked_list_pole_inventory.h`, and `bst_pole_id_index.h`.

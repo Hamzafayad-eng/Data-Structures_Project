@@ -61,14 +61,14 @@ Data-Structures_Project/
 │   └── settings.json         ← C/C++ Runner settings (optional)
 ├── Source_Code/
 │   ├── main.cpp                 ← Menu and program flow
-│   ├── stack.h             ← Stack declarations
-│   ├── stack.cpp           ← Repair history Stack
-│   ├── queue.h             ← Queue declarations
-│   ├── queue.cpp           ← Circular waiting Queue
-│   ├── linked_list.h                ← List node and function declarations
-│   ├── linked_list.cpp              ← Streetlight Linked List
-│   ├── bst.h               ← BST node and function declarations
-│   ├── bst.cpp             ← Pole ID Binary Search Tree
+│   ├── stack_repair_history.h      ← Stack declarations
+│   ├── stack_repair_history.cpp    ← Repair history Stack
+│   ├── queue_faults_waiting.h      ← Queue declarations
+│   ├── queue_faults_waiting.cpp    ← Circular Queue of reported faults
+│   ├── linked_list_pole_inventory.h ← Inventory list declarations
+│   ├── linked_list_pole_inventory.cpp ← Pole inventory Linked List
+│   ├── bst_pole_id_index.h         ← BST declarations
+│   ├── bst_pole_id_index.cpp       ← BST for pole ID lookup
 │   └── main.exe                  ← Windows build output (regenerated from all sources)
 ├── Report/
 │   └── CS212_Project_77_Streetlight_Repair_Desk_Report.docx
@@ -93,7 +93,7 @@ Data-Structures_Project/
 ### Using `g++` (Linux / macOS / Windows MinGW)
 
 ```bash
-g++ -std=c++17 Source_Code/main.cpp Source_Code/stack.cpp Source_Code/queue.cpp Source_Code/linked_list.cpp Source_Code/bst.cpp -o streetlight_app
+g++ -std=c++17 Source_Code/main.cpp Source_Code/stack_repair_history.cpp Source_Code/queue_faults_waiting.cpp Source_Code/linked_list_pole_inventory.cpp Source_Code/bst_pole_id_index.cpp -o streetlight_app
 ./streetlight_app
 ```
 

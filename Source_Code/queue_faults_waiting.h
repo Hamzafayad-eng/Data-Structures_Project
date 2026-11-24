@@ -1,5 +1,5 @@
-#ifndef QUEUE_H
-#define QUEUE_H
+#ifndef QUEUE_FAULTS_WAITING_H
+#define QUEUE_FAULTS_WAITING_H
 
 #include <string>
 

@@ -1,5 +1,5 @@
-#ifndef LINKED_LIST_H
-#define LINKED_LIST_H
+#ifndef LINKED_LIST_POLE_INVENTORY_H
+#define LINKED_LIST_POLE_INVENTORY_H
 
 #include <string>
 

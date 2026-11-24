@@ -5,7 +5,7 @@ cd /d "%~dp0"
 
 set "OUTPUT=Source_Code\main.exe"
 echo Building Streetlight Repair Desk...
-g++ -std=c++17 -O2 -Wall -Wextra Source_Code\main.cpp Source_Code\stack.cpp Source_Code\queue.cpp Source_Code\linked_list.cpp Source_Code\bst.cpp -o "%OUTPUT%"
+g++ -std=c++17 -O2 -Wall -Wextra Source_Code\main.cpp Source_Code\stack_repair_history.cpp Source_Code\queue_faults_waiting.cpp Source_Code\linked_list_pole_inventory.cpp Source_Code\bst_pole_id_index.cpp -o "%OUTPUT%"
 
 if %errorlevel% neq 0 (
     echo.

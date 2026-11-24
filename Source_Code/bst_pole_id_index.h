@@ -1,7 +1,7 @@
-#ifndef BST_H
-#define BST_H
+#ifndef BST_POLE_ID_INDEX_H
+#define BST_POLE_ID_INDEX_H
 
-#include "linked_list.h"
+#include "linked_list_pole_inventory.h"
 
 struct BSTNode {
     int data;

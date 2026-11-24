@@ -1,4 +1,4 @@
-#include "queue.h"
+#include "queue_faults_waiting.h"
 #include <iostream>
 
 using namespace std;
