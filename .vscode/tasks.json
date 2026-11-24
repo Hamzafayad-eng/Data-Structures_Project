@@ -11,6 +11,10 @@
         "-Wall",
         "-Wextra",
         "${workspaceFolder}/Source_Code/main.cpp",
+        "${workspaceFolder}/Source_Code/stack.cpp",
+        "${workspaceFolder}/Source_Code/queue.cpp",
+        "${workspaceFolder}/Source_Code/linked_list.cpp",
+        "${workspaceFolder}/Source_Code/bst.cpp",
         "-o",
         "${workspaceFolder}/streetlight_app"
       ],
@@ -21,6 +25,10 @@
           "-Wall",
           "-Wextra",
           "${workspaceFolder}/Source_Code/main.cpp",
+          "${workspaceFolder}/Source_Code/stack.cpp",
+          "${workspaceFolder}/Source_Code/queue.cpp",
+          "${workspaceFolder}/Source_Code/linked_list.cpp",
+          "${workspaceFolder}/Source_Code/bst.cpp",
           "-o",
           "${workspaceFolder}/Source_Code/main.exe"
         ]

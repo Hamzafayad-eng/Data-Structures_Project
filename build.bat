@@ -1,11 +1,11 @@
 @echo off
 REM Streetlight Repair Desk - one-click build & run (Windows)
-REM Rebuild the tracked executable from Source_Code\main.cpp before running it.
+REM Build all source files into the tracked executable before running it.
 cd /d "%~dp0"
 
 set "OUTPUT=Source_Code\main.exe"
 echo Building Streetlight Repair Desk...
-g++ -std=c++17 -O2 -Wall -Wextra Source_Code\main.cpp -o "%OUTPUT%"
+g++ -std=c++17 -O2 -Wall -Wextra Source_Code\main.cpp Source_Code\stack.cpp Source_Code\queue.cpp Source_Code\linked_list.cpp Source_Code\bst.cpp -o "%OUTPUT%"
 
 if %errorlevel% neq 0 (
     echo.

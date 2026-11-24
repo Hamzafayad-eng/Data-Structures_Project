@@ -5,7 +5,7 @@
 From the project root, compile and run the supplied end-to-end session:
 
 ```bash
-g++ -std=c++17 -Wall -Wextra Source_Code/main.cpp -o streetlight_app
+g++ -std=c++17 -Wall -Wextra Source_Code/main.cpp Source_Code/stack.cpp Source_Code/queue.cpp Source_Code/linked_list.cpp Source_Code/bst.cpp -o streetlight_app
 ./streetlight_app < Tests/sample_demo_input.txt
 ```
 
@@ -40,4 +40,4 @@ The capacity and wraparound checks use scripted inputs; they are longer than the
 
 ## 4. Known Implementation Limits
 
-The circular Queue has a fixed capacity of 100 entries. The BST is not self-balancing, so sorted input can create a chain and slow its operations. All records remain in memory only while the program runs. The implementation stays in one source file, `Source_Code/main.cpp`, to keep the project in the requested single-file structure.
+The circular Queue has a fixed capacity of 100 entries. The BST is not self-balancing, so sorted input can create a chain and slow its operations. All records remain in memory only while the program runs. The implementation is split by role: `main.cpp` contains the menu, `stack.cpp` and `queue.cpp` implement the work lists, `linked_list.cpp` manages pole records, and `bst.cpp` manages the BST. Each structure has its own header for shared declarations: `stack.h`, `queue.h`, `linked_list.h`, and `bst.h`.

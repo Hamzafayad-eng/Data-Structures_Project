@@ -60,8 +60,16 @@ Data-Structures_Project/
 │   ├── c_cpp_properties.json ← IntelliSense (C++17)
 │   └── settings.json         ← C/C++ Runner settings (optional)
 ├── Source_Code/
-│   ├── main.cpp
-│   └── main.exe                 ← Windows build output (regenerated from main.cpp)
+│   ├── main.cpp                 ← Menu and program flow
+│   ├── stack.h             ← Stack declarations
+│   ├── stack.cpp           ← Repair history Stack
+│   ├── queue.h             ← Queue declarations
+│   ├── queue.cpp           ← Circular waiting Queue
+│   ├── linked_list.h                ← List node and function declarations
+│   ├── linked_list.cpp              ← Streetlight Linked List
+│   ├── bst.h               ← BST node and function declarations
+│   ├── bst.cpp             ← Pole ID Binary Search Tree
+│   └── main.exe                  ← Windows build output (regenerated from all sources)
 ├── Report/
 │   └── CS212_Project_77_Streetlight_Repair_Desk_Report.docx
 ├── Screenshots/
@@ -85,7 +93,7 @@ Data-Structures_Project/
 ### Using `g++` (Linux / macOS / Windows MinGW)
 
 ```bash
-g++ -std=c++17 Source_Code/main.cpp -o streetlight_app
+g++ -std=c++17 Source_Code/main.cpp Source_Code/stack.cpp Source_Code/queue.cpp Source_Code/linked_list.cpp Source_Code/bst.cpp -o streetlight_app
 ./streetlight_app
 ```
 
@@ -105,12 +113,12 @@ make clean    # remove build artifacts
 The repo ships with a ready-made `.vscode/` config, so the Run button works out of the box:
 
 1. **Install prerequisites (once):**
-   - Extension **C/C++** (Microsoft) — and optionally **C/C++ Runner**
+   - Extension **C/C++** (Microsoft); use the included build task so all source files are linked
    - A C++ compiler: on Windows install **MinGW-w64** and add its `bin` folder to `PATH`
    - Verify in the VS Code integrated terminal (`Ctrl + \``): `g++ --version`
 2. **Open the folder, not just the file:** `File > Open Folder` → select `Data-Structures_Project`
 3. **Press the Run button:** open the **Run and Debug** panel (left sidebar ▶) and click ▶, or press `F5` (Debug) / `Ctrl+F5` (Run without Debug — best for this menu app).
-   - `tasks.json` builds `Source_Code/main.exe` on Windows and `streetlight_app` on Linux/macOS, then `launch.json` runs the matching output. Windows Run/Debug rebuilds the tracked `.exe` from `Source_Code/main.cpp`.
+   - `tasks.json` builds `Source_Code/main.exe` on Windows and `streetlight_app` on Linux/macOS from all five `.cpp` files, then `launch.json` runs the matching output. Windows Run/Debug rebuilds the tracked `.exe` from the current sources.
 4. **Get a standalone executable:** on Windows, double-click **`build.bat`** to rebuild and run `Source_Code/main.exe` from the current source. On Linux/macOS, run `./build.sh` to build and run `streetlight_app`. A source change does not update an executable until a build is run.
 
 > **Troubleshooting**
@@ -123,8 +131,8 @@ The repo ships with a ready-made `.vscode/` config, so the Run button works out 
 
 ### Using another IDE (Code::Blocks / Dev-C++ / Visual Studio / CLion)
 
-1. Open `Source_Code/main.cpp` in a C++ Console Application project.
-2. Click **Build and Run**.
+1. Add all files in `Source_Code/` to a C++ Console Application project.
+2. Build and run the project. If compiling from a terminal, use the full command above so every `.cpp` file is linked.
 
 ### Automated Demo Script
 
